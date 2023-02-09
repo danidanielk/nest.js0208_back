@@ -22,6 +22,7 @@ export class BoardRepository extends Repository<BoardEntity> {
   }
 
   async findById(id): Promise<BoardEntity> {
+    console.log(typeof id);
     const board = await this.findOneBy({ id });
     if (!board) {
       throw new HttpException(`Not found > ${id}`, 404);
@@ -29,7 +30,7 @@ export class BoardRepository extends Repository<BoardEntity> {
     return board;
   }
 
-  async findAll(): Promise<BoardEntity[]> {
+  async findAll(boardDto: BoardDto): Promise<BoardEntity[]> {
     const board = await this.find();
 
     return board;
@@ -54,5 +55,12 @@ export class BoardRepository extends Repository<BoardEntity> {
     } else {
       throw new HttpException(`delete success of id:${id}`, 200);
     }
+  }
+
+  async test(title): Promise<BoardEntity> {
+    console.log(title);
+    console.log(typeof title);
+    const test = await this.findOneBy({ title });
+    return test;
   }
 }

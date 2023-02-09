@@ -17,8 +17,8 @@ export class BoardService {
 
     return board;
   }
-  findAll(): Promise<BoardEntity[]> {
-    const board = this.boardRepository.findAll();
+  findAll(boardDto: BoardDto): Promise<BoardEntity[]> {
+    const board = this.boardRepository.findAll(boardDto);
 
     return board;
   }
@@ -29,5 +29,9 @@ export class BoardService {
 
   deleteBoard(id: number): Promise<void> {
     return this.boardRepository.deleteBoard(id);
+  }
+
+  test(title): Promise<BoardEntity> {
+    return this.boardRepository.test(title);
   }
 }

@@ -29,8 +29,8 @@ export class BoardController {
   }
 
   @Get()
-  fidAll(): Promise<BoardEntity[]> {
-    return this.boardService.findAll();
+  fidAll(boardDto: BoardDto): Promise<BoardEntity[]> {
+    return this.boardService.findAll(boardDto);
   }
 
   @Patch(':id')
@@ -44,5 +44,10 @@ export class BoardController {
   @Delete(':id')
   deleteBoard(@Param('id', ParseIntPipe) id): Promise<void> {
     return this.boardService.deleteBoard(id);
+  }
+
+  @Get(':title')
+  test(@Param('title') title): Promise<BoardEntity> {
+    return this.boardService.test(title);
   }
 }
