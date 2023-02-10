@@ -17,6 +17,7 @@ export class BoardRepository extends Repository<BoardEntity> {
       status: BoardStatus.public,
       user: req.user,
     });
+    // console.log(req.user);
     await this.save(board);
     return board;
   }

@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private aughRepository: AuthRepository) {
     super({
       //토큰의 유효성 검사.
-      secretOrKey: 'dd',
+      secretOrKey: process.env.KEY,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }

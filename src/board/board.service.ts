@@ -12,6 +12,7 @@ export class BoardService {
     return this.boardRepository.createBoard(boardDto, req);
   }
 
+  //
   findById(id): Promise<BoardEntity> {
     const board = this.boardRepository.findById(id);
     if (!board) {
@@ -20,11 +21,23 @@ export class BoardService {
     return board;
   }
 
-  findAll(): Promise<BoardEntity[]> {
-    const board = this.boardRepository.findAll();
-
-    return board;
+  //
+  async findAllOfUser(req) {
+    const user = req.user;
+    console.log(user);
+    console.log(user.id);
+    const query = this.boardRepository.createQueryBuilder('board');
+    query.where('board.userId = :userId', { userId: user.id });
+    const boards = await query.getMany();
+    return boards;
   }
+
+  //
+  findAll(): Promise<BoardEntity[]> {
+    return this.boardRepository.findAll();
+  }
+
+  //
   async ubdateBoard(id, status: BoardStatus): Promise<BoardEntity> {
     const board = await this.boardRepository.updateBoard(id);
     // const inputstatus = status.toUpperCase(); //타입을 BoardStatus 로 바꾸는법 찾아보기..
@@ -38,6 +51,7 @@ export class BoardService {
     return board;
   }
 
+  //
   async deleteBoard(id: number): Promise<void> {
     const getAffected = await this.boardRepository.deleteBoard(id);
     if (getAffected.affected === 0) {
