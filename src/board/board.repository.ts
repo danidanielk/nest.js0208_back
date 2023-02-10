@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { HttpException } from '@nestjs/common/exceptions';
 import { DataSource, Repository } from 'typeorm';
 import { BoardDto } from './board.dto';
 import { BoardEntity } from './board.entity';
@@ -11,11 +10,12 @@ export class BoardRepository extends Repository<BoardEntity> {
     super(BoardEntity, dataSource.createEntityManager());
   }
 
-  async createBoard(boardDto: BoardDto): Promise<BoardEntity> {
+  async createBoard(boardDto: BoardDto, req): Promise<BoardEntity> {
     const board = this.create({
       title: boardDto.title,
       description: boardDto.description,
       status: BoardStatus.public,
+      user: req.user,
     });
     await this.save(board);
     return board;
@@ -23,44 +23,19 @@ export class BoardRepository extends Repository<BoardEntity> {
 
   async findById(id): Promise<BoardEntity> {
     console.log(typeof id);
-    const board = await this.findOneBy({ id });
-    if (!board) {
-      throw new HttpException(`Not found > ${id}`, 404);
-    }
-    return board;
+    return await this.findOneBy({ id });
   }
 
-  async findAll(boardDto: BoardDto): Promise<BoardEntity[]> {
-    const board = await this.find();
-
-    return board;
+  async findAll(): Promise<BoardEntity[]> {
+    return await this.find();
   }
 
-  async updateBoard(id, status: BoardStatus): Promise<BoardEntity> {
-    const board = await this.findById(id);
-    board.status = status;
-    await this.save(board);
-    const aa = [BoardStatus.private, BoardStatus.public];
-    const bb = aa.indexOf(status);
-    if (bb === -1) {
-      throw new HttpException('please insert PUBLIC or PRIVATE', 404);
-    }
-    return board;
+  async updateBoard(id): Promise<BoardEntity> {
+    return await this.findById(id);
   }
 
-  async deleteBoard(id): Promise<void> {
-    const board = await this.delete(id);
-    if (board.affected === 0) {
-      throw new HttpException(`Not found your id :${id}`, 404);
-    } else {
-      throw new HttpException(`delete success of id:${id}`, 200);
-    }
-  }
-
-  async test(title): Promise<BoardEntity> {
-    console.log(title);
-    console.log(typeof title);
-    const test = await this.findOneBy({ title });
-    return test;
+  async deleteBoard(id): Promise<any> {
+    const oneOfAffected = await this.delete(id);
+    return oneOfAffected;
   }
 }
