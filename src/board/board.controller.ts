@@ -9,7 +9,14 @@ import {
   Req,
   Query,
 } from '@nestjs/common';
-import { Delete, Param, Patch } from '@nestjs/common/decorators';
+import {
+  Delete,
+  Param,
+  Patch,
+  UploadedFile,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common/decorators';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { BoardDto } from './board.dto';
 import { BoardEntity } from './board.entity';
@@ -17,6 +24,9 @@ import { BoardService } from './board.service';
 import { BoardStatus } from './board.status';
 import { AuthGuard } from '@nestjs/passport';
 import { Logger } from '@nestjs/common/services';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express/multer';
+import { multerOptions } from 'src/config/multer.option';
 
 @Controller('board')
 @UseGuards(AuthGuard())
@@ -50,7 +60,7 @@ export class BoardController {
   }
 
   //모든 게시물 select
-  @Get('/what')
+  @Get('/hello/select')
   findAll(): Promise<BoardEntity[]> {
     return this.boardService.findAll();
   }
@@ -70,11 +80,23 @@ export class BoardController {
     return this.boardService.deleteBoard(id, req);
   }
 
-  //  쿼리파라미터 사용 Post로도 안된다..
-  //  세부주소 사용방법이 따로있나 찾아보자.
-  //  "Validation failed (numeric string is expected)" 원인찾기.
-  @Post()
+  //test
+  @Get('/test/query')
   querytest(@Query('title') title) {
-    console.log(title);
+    console.log(title + 'testmethod');
+  }
+
+  //단일 파일업로드
+  @UseInterceptors(FileInterceptor('fromfront', multerOptions('board1')))
+  @Post('/upload')
+  uploadImg(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+  }
+
+  //여러 파일업로드
+  @UseInterceptors(FilesInterceptor('fromfront', 5, multerOptions('board2')))
+  @Post('/upload2')
+  uploadImg2(@UploadedFiles() files: Array<Express.Multer.File>) {
+    console.log(files);
   }
 }
