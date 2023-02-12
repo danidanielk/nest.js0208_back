@@ -52,8 +52,8 @@ export class BoardService {
   }
 
   //
-  async deleteBoard(id: number): Promise<void> {
-    const getAffected = await this.boardRepository.deleteBoard(id);
+  async deleteBoard(id: number, req): Promise<void> {
+    const getAffected = await this.boardRepository.deleteBoard(id, req);
     if (getAffected.affected === 0) {
       throw new HttpException(`Not found your id :${id}`, 404);
     } else {

@@ -35,8 +35,8 @@ export class BoardRepository extends Repository<BoardEntity> {
     return await this.findById(id);
   }
 
-  async deleteBoard(id): Promise<any> {
-    const oneOfAffected = await this.delete(id);
+  async deleteBoard(id, req): Promise<any> {
+    const oneOfAffected = await this.delete({ id, user: req.user });
     return oneOfAffected;
   }
 }
