@@ -13,9 +13,9 @@ import {
   Delete,
   Param,
   Patch,
-  UploadedFile,
-  UploadedFiles,
-  UseInterceptors,
+  // UploadedFile,
+  // UploadedFiles,
+  // UseInterceptors,
 } from '@nestjs/common/decorators';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { BoardDto } from './board.dto';
@@ -24,9 +24,9 @@ import { BoardService } from './board.service';
 import { BoardStatus } from './board.status';
 import { AuthGuard } from '@nestjs/passport';
 import { Logger } from '@nestjs/common/services';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { FilesInterceptor } from '@nestjs/platform-express/multer';
-import { multerOptions } from 'src/config/multer.option';
+// import { FileInterceptor } from '@nestjs/platform-express';
+// import { FilesInterceptor } from '@nestjs/platform-express/multer';
+// import { multerOptions } from 'src/config/multer.option';
 
 @Controller('board')
 @UseGuards(AuthGuard())
@@ -86,17 +86,17 @@ export class BoardController {
     console.log(title + 'testmethod');
   }
 
-  //단일 파일업로드
-  @UseInterceptors(FileInterceptor('fromfront', multerOptions('board1')))
-  @Post('/upload')
-  uploadImg(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-  }
+  // //단일 파일업로드
+  // @UseInterceptors(FileInterceptor('fromfront', multerOptions('board1')))
+  // @Post('/upload')
+  // uploadImg(@UploadedFile() file: Express.Multer.File) {
+  //   console.log(file);
+  // }
 
-  //여러 파일업로드
-  @UseInterceptors(FilesInterceptor('fromfront', 5, multerOptions('board2')))
-  @Post('/upload2')
-  uploadImg2(@UploadedFiles() files: Array<Express.Multer.File>) {
-    console.log(files);
-  }
+  // //여러 파일업로드
+  // @UseInterceptors(FilesInterceptor('fromfront', 5, multerOptions('board2')))
+  // @Post('/upload2')
+  // uploadImg2(@UploadedFiles() files: Array<Express.Multer.File>) {
+  //   console.log(files);
+  // }
 }
